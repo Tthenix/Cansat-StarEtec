@@ -7,7 +7,8 @@
 #define DHTPIN 25
 #define DHTTYPE DHT11
 
-class SensorServicio {
+class SensorServicio
+{
 public:
     SensorServicio();
 
