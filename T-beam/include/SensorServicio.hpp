@@ -102,6 +102,8 @@ private:
     float icharge;
     float idischarge;
     float tempAXP192;
+    float mAh;
+    float deltaT = 1.0;
 
     //*** TFmini values ***/
     SoftwareSerial  TFminiSerial;

@@ -42,6 +42,10 @@ void SensorServicio::leerSensores() {
   idischarge = M5.Axp.GetIdischargeData() / 2.0;
   tempAXP192 = M5.Axp.GetTempInAXP192();
 
+  // Leer el tiempo transcurrido desde el último ciclo de bucle en segundos
+  // float deltaT = 1.0; // Ajusta este valor según la frecuencia de lectura
+  mAh = (idischarge / 1000.0) * (deltaT / 3600.0);
+
   //*** DHT values ***/
   dhtHum = dht.readHumidity();
   dhtTemp = dht.readTemperature();
@@ -79,6 +83,9 @@ void SensorServicio::mostrarValores() {
   Serial.println("-----------------------------------------------");
   Serial.println("Sensor AXP192");
 
+  Serial.print("\tConsumo: ");
+  Serial.print(mAh, 3);
+  Serial.println(" mA/h");
   Serial.print("\tVbat: ");
   Serial.print(vbat, 3);
   Serial.println(" V");
@@ -221,21 +228,22 @@ void SensorServicio::formatearData(float* data) {
   data[0] = mq7Pin;
   data[1] = mq7VoltageValue;
   data[2] = mq7COppm;
-  data[3] = vbat;
-  data[4] = vaps;
-  data[5] = icharge;
-  data[6] = idischarge;
-  data[7] = tempAXP192;
-  data[8] = dhtHum;
-  data[9] = dhtTemp;
-  data[10] = dhtTempF;
-  data[11] = bmpPres;
-  data[12] = bmpTemp;
-  data[13] = bmpAlti;
-  data[14] = TFdistance;
-  data[15] = TFstrength;
-  data[16] = TFtemp;
-  data[17] = gpsLatitude;
-  data[18] = gpsLongitude;
-  data[19] = gpsAltitude;
+  data[3] = mAh;
+  data[4] = vbat;
+  data[5] = vaps;
+  data[6] = icharge;
+  data[7] = idischarge;
+  data[8] = tempAXP192;
+  data[9] = dhtHum;
+  data[10] = dhtTemp;
+  data[11] = dhtTempF;
+  data[12] = bmpPres;
+  data[13] = bmpTemp;
+  data[14] = bmpAlti;
+  data[15] = TFdistance;
+  data[16] = TFstrength;
+  data[17] = TFtemp;
+  data[18] = gpsLatitude;
+  data[19] = gpsLongitude;
+  data[20] = gpsAltitude;
 }

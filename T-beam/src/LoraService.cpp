@@ -45,18 +45,14 @@ bool LoraService::sendSensorData(const float *data, size_t size)
 // Función para enviar los datos por LoRa
 void LoraService::enviarDatosLoRa(float* data, int dataSize) {
     
-  // Establece la dirección de red
-  LoRa.setTxRxMode(LoRa.MODE_TX);
-  LoRa.setNetworkAddress(networkAddress);
+    LoRa.beginPacket();
+    LoRa.print("Vector de datos ");
 
-  // Envía los datos por LoRa
-  LoRa.startTransmit(receiverAddress, (byte*)data, dataSize * sizeof(float));
-
-  // Espera hasta que se complete la transmisión
-  while (LoRa.transmitting());
-
-  // Apaga el módulo LoRa
-  LoRa.setTxRxMode(LoRa.MODE_SLEEP);
+    // Envía los datos por LoRa
+    for (int i = 0; i < dataSize; i++) {
+        LoRa.write((byte*)&data[i], sizeof(float));
+    }
+    LoRa.endPacket();
 }
 
 bool LoraService::receiveConfirmation()
