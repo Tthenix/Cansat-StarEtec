@@ -19,6 +19,7 @@ public:
     LoraService();
     void begin();
     bool sendSensorData(const float *data, size_t size);
+    void enviarDatosLoRa(float* data, int dataSize);
     bool receiveConfirmation();
     bool reconnect();
 

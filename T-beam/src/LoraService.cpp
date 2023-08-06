@@ -18,8 +18,7 @@ void LoraService::begin()
     if (!LoRa.begin(866E6))
     {
         Serial.println("Starting LoRa failed!");
-        while (1)
-            ;
+        while (1);
     }
     Serial.println("LoRa Inicializacion OK!");
 }
@@ -41,6 +40,23 @@ bool LoraService::sendSensorData(const float *data, size_t size)
 
     // Retorno temporal para cumplir con la firma de la función.
     return true;
+}
+
+// Función para enviar los datos por LoRa
+void LoraService::enviarDatosLoRa(float* data, int dataSize) {
+    
+  // Establece la dirección de red
+  LoRa.setTxRxMode(LoRa.MODE_TX);
+  LoRa.setNetworkAddress(networkAddress);
+
+  // Envía los datos por LoRa
+  LoRa.startTransmit(receiverAddress, (byte*)data, dataSize * sizeof(float));
+
+  // Espera hasta que se complete la transmisión
+  while (LoRa.transmitting());
+
+  // Apaga el módulo LoRa
+  LoRa.setTxRxMode(LoRa.MODE_SLEEP);
 }
 
 bool LoraService::receiveConfirmation()
