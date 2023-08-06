@@ -1,0 +1,6 @@
+By:Lucas Adriano Perinetti
+Primer diseño
+Ventajas: Resistente
+Desventajas: Pesa demasiado, No se tuvo en cuenta el BMP280
+
+Las ideas partieron de un diseño cilindrico el cual se armo y se le hicieron ajugueros para los sensores, tambien se diseño una tapa para el cilindro y una estructura interna
