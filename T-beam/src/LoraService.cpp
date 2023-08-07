@@ -15,10 +15,11 @@ void LoraService::begin()
     SPI.begin(SCK, MISO, MOSI, SS);
     LoRa.setPins(SS, RST, DIO0);
 
-    if (!LoRa.begin(866E6))
+    if (!LoRa.begin(BAND))
     {
         Serial.println("Starting LoRa failed!");
-        while (1);
+        while (1)
+            ;
     }
     Serial.println("LoRa Inicializacion OK!");
 }
@@ -43,14 +44,16 @@ bool LoraService::sendSensorData(const float *data, size_t size)
 }
 
 // Función para enviar los datos por LoRa
-void LoraService::enviarDatosLoRa(float* data, int dataSize) {
-    
+void LoraService::enviarDatosLoRa(float *data, int dataSize)
+{
+
     LoRa.beginPacket();
     LoRa.print("Vector de datos ");
 
     // Envía los datos por LoRa
-    for (int i = 0; i < dataSize; i++) {
-        LoRa.write((byte*)&data[i], sizeof(float));
+    for (int i = 0; i < dataSize; i++)
+    {
+        LoRa.write((byte *)&data[i], sizeof(float));
     }
     LoRa.endPacket();
 }

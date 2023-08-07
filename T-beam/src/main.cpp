@@ -4,12 +4,12 @@
 #include "../include/LoraService.hpp"    // Incluimos archivos de cabeceras correspondientes
 
 SensorServicio servicioParaSensores;      // Instanciamos el objeto servicioParaSensores de la clase SensorService
-LoraService servicioParaLora;      // Instanciamos el objeto servicioParaLora de la clase LoraService
+// LoraService servicioParaLora;      // Instanciamos el objeto servicioParaLora de la clase LoraService
 
 void setup()
 {
-  servicioParaSensores.begin();     // Método para inicializar los sensores
-  servicioParaLora.begin();      // Método para inicializar la comunicación LoRa
+  servicioParaSensores.begin();      // Método para inicializar los sensores
+  // servicioParaLora.begin();      // Método para inicializar la comunicación LoRa
 }
 
 void loop()
@@ -21,7 +21,7 @@ void loop()
   servicioParaSensores.mostrarValores();    // Método para realizar la impresión de valores leidos
 
   servicioParaSensores.formatearData(ValoresDeSensores);    // Formateamos los datos a un vector de float
-  servicioParaLora.enviarDatosLoRa(ValoresDeSensores, sizeOfArray);    // Se envían los datos del vector por LoRa
+  // servicioParaLora.enviarDatosLoRa(ValoresDeSensores, sizeOfArray);    // Se envían los datos del vector por LoRa
 
   delete[] ValoresDeSensores;   // Liberar la memoria asignada con new
 

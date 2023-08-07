@@ -1,8 +1,9 @@
 #ifndef SENSOR_SERVICIO_H
 #define SENSOR_SERVICIO_H
 
-#include <HardwareSerial.h>
+// #include <HardwareSerial.h>
 #include "SoftwareSerial.h"
+#include "Wire.h"
 
 #include <M5StickC.h>
 #include "DHT.h"
@@ -11,24 +12,34 @@
 #include "TFMiniPlus.h"
 #include "TinyGPSPlus.h"
 
+// Parámetros a tener en cuenta con el DHT11
 #define DHTPIN 25
 #define DHTTYPE DHT11
 
+// Parámetros a tener en cuenta con el USB
 #define SerialUsb_BAUDRATE 115200
 #define SerialUsb_NUM 0
 #define SerialUsb_RX_PIN 3
 #define SerialUsb_TX_PIN 1
 
+// Parámetros a tener en cuenta con el Neo6m
 #define GPS_BAUDRATE 9600
-#define GPS_SERIAL_NUM 2
+// #define GPS_SERIAL_NUM 2
 #define GPS_RX_PIN 34
 #define GPS_TX_PIN 12
 
+// Parámetros a tener en cuenta con el TFmini
 #define TFMINI_BAUDRATE 115200
 // En uso probablemente con el AXP192.
 // #define TFMINI_SERIAL_NUM 2 
-#define TFMINI_RX_PIN 15
-#define TFMINI_TX_PIN 35
+// Se tiene quer invertir en software y hardware
+#define TFMINI_RX_PIN 35                                                                                                                                                                                        
+#define TFMINI_TX_PIN 32
+
+// Parámetros a tener en cuenta con el BMP280
+#define BMP280_ADDRESS 0x76
+#define BMP_SDA 21   // Pin SDA conectado al pin 21 de la placa LilyGO
+#define BMP_SCL 22   // Pin SCL conectado al pin 22 de la placa LilyGO
 
 class SensorServicio
 {
@@ -54,6 +65,7 @@ public:
     float getPresionBMP() const { return bmpPres;}
 
     //*** TFmini Getters ***/
+
     void getTFminiData();
     float getDistanciaTF() const { return TFdistance;}
     float getTemperaturaTF() const { return TFtemp;}
@@ -92,9 +104,9 @@ private:
     int mq7Pin; 
     int mq7VoltageValue; 
     float mq7COppm;
-    float mq7Offset = 0.0;
-    float mq7MaxPPM = 5.0;
-    float mq7MaxValue = 1023.0;
+    float mq7Offset;
+    float mq7MaxPPM;
+    float mq7MaxValue;
 
     //*** AXP192 values ***/
     float vbat;
@@ -103,17 +115,17 @@ private:
     float idischarge;
     float tempAXP192;
     float mAh;
-    float deltaT = 1.0;
+    float deltaT;
 
     //*** TFmini values ***/
-    SoftwareSerial  TFminiSerial;
+    // SoftwareSerial  TFminiSerial;
     TFMiniPlus TFmini;
     float TFdistance;
     float TFtemp;
     float TFstrength;
     
     //*** NEO6M values ***/
-    HardwareSerial NEO6mSerial;
+    // SoftwareSerial NEO6mSerial;
     TinyGPSPlus gps;
     float gpsLatitude;
     float gpsLongitude;
