@@ -3,13 +3,15 @@
 SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE)
           ,bmp()
           // ,TFminiSerial(TFMINI_RX_PIN, TFMINI_TX_PIN)
-          //  ,NEO6mSerial(GPS_RX_PIN, GPS_TX_PIN)
+           ,NEO6mSerial(GPS_TX_PIN, GPS_RX_PIN)
 {
   // Se definen parametros de seteo para MQ7
   mq7Pin = 14;  // Defino el pin donde estará el sensor MQ7
   mq7Offset = 0.0;
   mq7MaxPPM = 5.0;
   mq7MaxValue = 1023.0;
+  // Ajuste de la zona horaria local (UTC-3 para Mendoza, Argentina)
+  timeZoneOffset = -3;
   
   // Se definen parametros de seteo para AXP192
   deltaT = 1.0;
@@ -17,7 +19,6 @@ SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE)
 
 void SensorServicio::begin()
 {
-
   Serial.begin(SerialUsb_BAUDRATE);
   dht.begin();
 
@@ -179,9 +180,9 @@ void SensorServicio::mostrarValores()
   Serial.print(gpsSpeed);
   Serial.println(" m/s");
   Serial.print("\tFecha: ");
-  Serial.print(gpsDate);
+  Serial.print(fecha);
   Serial.print("\tHora: ");
-  Serial.println(gpsTime);
+  Serial.println(tiempo);
 }
 
 void SensorServicio::getTFminiData() {
@@ -213,8 +214,68 @@ void SensorServicio::getTFminiData() {
   // }
 }
 
+
 void SensorServicio::readGPS()
-{
+{  
+  uint8_t gpsYear = 0;    
+  uint8_t gpsMonth = 0;    
+  uint8_t gpsDay = 0;    
+  uint8_t gpsHour = 0;    
+  uint8_t gpsMinutes = 0;    
+  uint8_t gpsSeconds = 0;
+  while (NEO6mSerial.available() > 0) {
+    if (gps.encode(NEO6mSerial.read())) {
+      if (gps.location.isValid()) {
+        gpsLatitude = gps.location.lat();
+        gpsLongitude = gps.location.lng();
+        
+        // Obtener la altitud y velocidad
+        gpsAltitude = gps.altitude.meters();
+        gpsSpeed = gps.speed.kmph();
+
+        gpsHour = gps.time.hour();
+        gpsDay = gps.date.day();
+        // Ajustar la hora a la zona horaria local (UTC-3 para Mendoza, Argentina)
+        gpsHour += timeZoneOffset;
+        if (gpsHour < 0) {
+          gpsHour += 24;
+          gpsDay--;
+        } else if (gpsHour >= 24) {
+          gpsHour -= 24;
+          gpsDay++;
+        }
+
+        // Obtener la fecha y hora
+        if (gps.date.isValid()) {
+          gpsYear = gps.date.year(); 
+          gpsMonth = gps.date.month(); 
+        } else {
+          Serial.println("Fecha no válida");
+        }
+
+        if (gps.time.isValid()) {
+          gpsHour;
+          gpsMinutes = gps.time.minute();
+          gpsSeconds = gps.time.minute();
+        } else {
+          Serial.println("Hora no válida");
+        }
+        Serial.println();
+      } else {
+        Serial.println("Sin señal GPS");
+      }
+      fecha = "\tFecha: " + String((char *)gpsDay) + "/" + String((char *)gpsMonth) + "/" + String((char *)gpsYear);
+      // String((char *)str)
+      tiempo = "\tTiempo: " + String((char *)gpsHour) + ":" + String((char *)gpsMinutes) + ":" + String((char *)gpsSeconds);
+    }
+    // delay(500);
+  }
+
+// String converter(uint8_t *str){
+//     return String((char *)str);
+// }
+
+
   // // Leer datos del GPS y almacénalos en la librería TinyGPS++
   // Serial.print("Se procede a leer los datos del NEO 6-M");
   // while (NEO6mSerial.available() > 0)

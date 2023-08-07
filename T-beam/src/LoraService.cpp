@@ -46,7 +46,6 @@ bool LoraService::sendSensorData(const float *data, size_t size)
 // Función para enviar los datos por LoRa
 void LoraService::enviarDatosLoRa(float *data, int dataSize)
 {
-
     LoRa.beginPacket();
     LoRa.print("Vector de datos ");
 

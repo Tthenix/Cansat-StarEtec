@@ -4,6 +4,7 @@
 // #include <HardwareSerial.h>
 #include "SoftwareSerial.h"
 #include "Wire.h"
+#include "string.h"
 
 #include <M5StickC.h>
 #include "DHT.h"
@@ -83,9 +84,9 @@ public:
     float getAltitudGPS() const { return gpsAltitude; }
     float getLatitudGPS() const { return gpsLatitude; }
     float getLongitudGPS() const { return gpsLongitude; }
-    float getVelocidadGPS() const { return gpsSpeed; }
-    unsigned long getFechaGPS() const { return gpsDate; }
-    unsigned long getHoraGPS() const { return gpsTime; }
+    float getVelocidadGPS() const { return gpsSpeed; } 
+    String getFechaGPS () const {return fecha;}    
+    String getTiempoGPS () const {return tiempo;}   
 
 private:
     //*** DHT values ***/
@@ -125,14 +126,15 @@ private:
     float TFstrength;
     
     //*** NEO6M values ***/
-    // SoftwareSerial NEO6mSerial;
+    SoftwareSerial NEO6mSerial;
     TinyGPSPlus gps;
+    int timeZoneOffset;
     float gpsLatitude;
     float gpsLongitude;
     float gpsAltitude;
-    float gpsSpeed;
-    unsigned long gpsDate;
-    unsigned long gpsTime;
+    float gpsSpeed;  
+    String fecha;
+    String tiempo;  
 };
 
 #endif // SENSOR_SERVICIO_H
