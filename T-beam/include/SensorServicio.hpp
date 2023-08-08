@@ -4,11 +4,13 @@
 // #include <HardwareSerial.h>
 #include "SoftwareSerial.h"
 #include "Wire.h"
-#include "string.h"
 
 #include <M5StickC.h>
 #include "DHT.h"
 #include "Adafruit_BMP280.h"
+
+#include <BMP280_DEV.h>   
+
 #include "Adafruit_Sensor.h"
 #include "TFMiniPlus.h"
 #include "TinyGPSPlus.h"
@@ -26,8 +28,8 @@
 // Parámetros a tener en cuenta con el Neo6m
 #define GPS_BAUDRATE 9600
 // #define GPS_SERIAL_NUM 2
-#define GPS_RX_PIN 34
-#define GPS_TX_PIN 12
+#define GPS_TX_PIN 34
+#define GPS_RX_PIN 12
 
 // Parámetros a tener en cuenta con el TFmini
 #define TFMINI_BAUDRATE 115200
@@ -38,7 +40,7 @@
 #define TFMINI_TX_PIN 32
 
 // Parámetros a tener en cuenta con el BMP280
-#define BMP280_ADDRESS 0x76
+#define BMP280_ADDRESS_I2C 0x77
 #define BMP_SDA 21   // Pin SDA conectado al pin 21 de la placa LilyGO
 #define BMP_SCL 22   // Pin SCL conectado al pin 22 de la placa LilyGO
 
@@ -84,9 +86,13 @@ public:
     float getAltitudGPS() const { return gpsAltitude; }
     float getLatitudGPS() const { return gpsLatitude; }
     float getLongitudGPS() const { return gpsLongitude; }
-    float getVelocidadGPS() const { return gpsSpeed; } 
-    String getFechaGPS () const {return fecha;}    
-    String getTiempoGPS () const {return tiempo;}   
+    float getVelocidadGPS() const { return gpsSpeed; }    
+    uint8_t gpsYearGPS () const { return gpsYear;}
+    uint8_t gpsMonthGPS () const { return gpsMonth;}
+    uint8_t gpsDayGPS () const { return gpsDay;}
+    uint8_t gpsHourGPS () const { return gpsHour;}
+    uint8_t gpsMinutesGPS () const { return gpsMinutes;}
+    uint8_t gpsSecondsGPS () const { return gpsSeconds;}
 
 private:
     //*** DHT values ***/
@@ -126,15 +132,25 @@ private:
     float TFstrength;
     
     //*** NEO6M values ***/
-    SoftwareSerial NEO6mSerial;
+    SoftwareSerial gpsSerial;
     TinyGPSPlus gps;
     int timeZoneOffset;
     float gpsLatitude;
     float gpsLongitude;
     float gpsAltitude;
     float gpsSpeed;  
-    String fecha;
-    String tiempo;  
+    uint8_t gpsYear;    
+    uint8_t gpsMonth;    
+    uint8_t gpsDay;    
+    uint8_t gpsHour;    
+    uint8_t gpsMinutes;    
+    uint8_t gpsSeconds;
 };
 
 #endif // SENSOR_SERVICIO_H
+
+
+/*
+Latitud: -32.876923
+Longitud: -68.843529 
+*/
