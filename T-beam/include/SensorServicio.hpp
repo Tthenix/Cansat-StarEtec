@@ -7,11 +7,10 @@
 
 #include <M5StickC.h>
 #include "DHT.h"
-#include "Adafruit_BMP280.h"
+#include <Adafruit_BMP280.h>
 
-#include <BMP280_DEV.h>   
 
-#include "Adafruit_Sensor.h"
+// #include "Adafruit_Sensor.h"
 #include "TFMiniPlus.h"
 #include "TinyGPSPlus.h"
 
@@ -40,7 +39,7 @@
 #define TFMINI_TX_PIN 32
 
 // Parámetros a tener en cuenta con el BMP280
-#define BMP280_ADDRESS_I2C 0x77
+#define BMP280_ADDRESS_new (0x76)
 #define BMP_SDA 21   // Pin SDA conectado al pin 21 de la placa LilyGO
 #define BMP_SCL 22   // Pin SCL conectado al pin 22 de la placa LilyGO
 
@@ -68,7 +67,6 @@ public:
     float getPresionBMP() const { return bmpPres;}
 
     //*** TFmini Getters ***/
-
     void getTFminiData();
     float getDistanciaTF() const { return TFdistance;}
     float getTemperaturaTF() const { return TFtemp;}
@@ -109,7 +107,7 @@ private:
 
     //*** MQ7 values ***/    
     int mq7Pin; 
-    int mq7VoltageValue; 
+    float mq7VoltageValue; 
     float mq7COppm;
     float mq7Offset;
     float mq7MaxPPM;

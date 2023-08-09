@@ -28,8 +28,11 @@ void SensorServicio::begin()
   Serial.begin(SerialUsb_BAUDRATE);
   dht.begin();
 
+  M5.begin();
+   
+  // BMP init
   unsigned status;
-  status = bmp.begin(BMP280_ADDRESS_ALT);
+  status = bmp.begin(BMP280_ADDRESS_new);
   if (!status) {
     Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
                       "try a different address!"));
@@ -41,14 +44,12 @@ void SensorServicio::begin()
     while (1) delay(10);
   }
     /* Default settings from the datasheet. */
-  bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-                  Adafruit_BMP280::SAMPLING_X16,     /* Temp. oversampling */
+  bmp.setSampling(Adafruit_BMP280::MODE_FORCED,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X8,     /* Temp. oversampling */
                   Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                  Adafruit_BMP280::STANDBY_MS_2000); /* Standby time. */
+                  Adafruit_BMP280::STANDBY_MS_1000); /* Standby time. */
   
-  M5.begin();
-   
 
   // TFmini.setBaudRate(TFMINI_BAUDRATE);
   // TFmini.begin(&TFminiSerial);
@@ -64,10 +65,18 @@ void SensorServicio::leerSensores()
   mq7VoltageValue = analogRead(mq7Pin) * (3.3 / 1023.0);
 
   //*** AXP192 values ***/
-  vbat = M5.Axp.GetVbatData() * 1.1 / 1000;
-  vaps = M5.Axp.GetVapsData() * 1.4 / 1000;
-  icharge = M5.Axp.GetIchargeData() / 2.0;
-  idischarge = M5.Axp.GetIdischargeData() / 2.0;
+  // (deprecated) //
+  // vbat = M5.Axp.GetVbatData() * 1.1 / 1000;
+  // vaps = M5.Axp.GetVapsData() * 1.4 / 1000;
+  // icharge = M5.Axp.GetIchargeData() / 2.0;
+  // idischarge = M5.Axp.GetIdischargeData() / 2.0;
+  // tempAXP192 = M5.Axp.GetTempInAXP192();
+  // (deprecated) // EOF
+
+  vbat = M5.Axp.GetBatVoltage();
+  vaps = M5.Axp.GetAPSVoltage();
+  icharge = M5.Axp.GetBatCurrent();
+  idischarge = M5.Axp.GetBatChargeCurrent();
   tempAXP192 = M5.Axp.GetTempInAXP192();
 
   // Leer el tiempo transcurrido desde el último ciclo de bucle en segundos
@@ -84,14 +93,19 @@ void SensorServicio::leerSensores()
 
 
   //*** DHT values ***/
+  
   dhtHum = dht.readHumidity();
   dhtTemp = dht.readTemperature();
   dhtTempF = dht.readTemperature(true);
 
-  //*** BMP values ***/
-  bmpTemp = bmp.readTemperature();
-  bmpPres = bmp.readPressure() / 100;   // dividir por 100 para tener hPa
-  bmpAlti = bmp.readAltitude(1013.25);
+  // must call this to wake sensor up and get new measurement data
+  // it blocks until measurement is complete
+  if (bmp.takeForcedMeasurement()) {
+    //*** BMP values ***/
+    bmpTemp = bmp.readTemperature();
+    bmpPres = bmp.readPressure() / 100;   // dividir por 100 para tener hPa
+    bmpAlti = bmp.readAltitude(1013.25);
+  }
 
   // /*** TFmini values ***/
   // getTFminiData();
