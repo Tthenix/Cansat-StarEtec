@@ -11,11 +11,11 @@
 
 
 // #include "Adafruit_Sensor.h"
-#include "TFMiniPlus.h"
+#include <TFMiniPlus.h>
 #include "TinyGPSPlus.h"
 
 // Parámetros a tener en cuenta con el DHT11
-#define DHTPIN 25
+#define DHTPIN 13
 #define DHTTYPE DHT11
 
 // Parámetros a tener en cuenta con el USB
@@ -35,8 +35,8 @@
 // En uso probablemente con el AXP192.
 // #define TFMINI_SERIAL_NUM 2 
 // Se tiene quer invertir en software y hardware
-#define TFMINI_RX_PIN 35                                                                                                                                                                                        
-#define TFMINI_TX_PIN 32
+#define TFMINI_RX_PIN 33                                                                                                                                                                                        
+#define TFMINI_TX_PIN 25
 
 // Parámetros a tener en cuenta con el BMP280
 #define BMP280_ADDRESS_new (0x76)
@@ -123,7 +123,7 @@ private:
     float deltaT;
 
     //*** TFmini values ***/
-    // SoftwareSerial  TFminiSerial;
+    SoftwareSerial TFminiSerial;
     TFMiniPlus TFmini;
     float TFdistance;
     float TFtemp;

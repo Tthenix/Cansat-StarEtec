@@ -1,8 +1,8 @@
 #include "../include/SensorServicio.hpp"
 
 SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE)
-          // ,TFminiSerial(TFMINI_RX_PIN, TFMINI_TX_PIN)
-           ,gpsSerial(GPS_TX_PIN, GPS_RX_PIN)
+          ,TFminiSerial(TFMINI_TX_PIN, TFMINI_RX_PIN)
+          ,gpsSerial(GPS_TX_PIN, GPS_RX_PIN)
 {
 
   // Se definen parametros de seteo para MQ7
@@ -48,11 +48,11 @@ void SensorServicio::begin()
                   Adafruit_BMP280::SAMPLING_X8,     /* Temp. oversampling */
                   Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                  Adafruit_BMP280::STANDBY_MS_1000); /* Standby time. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
   
 
-  // TFmini.setBaudRate(TFMINI_BAUDRATE);
-  // TFmini.begin(&TFminiSerial);
+  TFminiSerial.begin(TFMINI_BAUDRATE);
+  TFmini.begin(&TFminiSerial);
 }
 
 void SensorServicio::leerSensores()
@@ -92,8 +92,7 @@ void SensorServicio::leerSensores()
   mAh = (current) * (deltaT / 3600.0);
 
 
-  //*** DHT values ***/
-  
+  //*** DHT values ***/  
   dhtHum = dht.readHumidity();
   dhtTemp = dht.readTemperature();
   dhtTempF = dht.readTemperature(true);
@@ -108,10 +107,10 @@ void SensorServicio::leerSensores()
   }
 
   // /*** TFmini values ***/
-  // getTFminiData();
-  // // TFdistance = TFmini.getDistance();
-  // // TFtemp = TFmini.getSensorTemperature();
-  // // TFstrength = TFmini.getSignalStrength();
+  this->getTFminiData();
+  TFdistance = TFmini.getDistance();
+  TFtemp = TFmini.getSensorTemperature();
+  TFstrength = TFmini.getSignalStrength();
 
   /*** NEO6M values ***/
   this->readGPS();
@@ -183,16 +182,16 @@ void SensorServicio::mostrarValores()
   Serial.print(bmpAlti);
   Serial.println(" m");
 
-  // Serial.println("-----------------------------------------------");
-  // Serial.println("Sensor TFmini");
+  Serial.println("-----------------------------------------------");
+  Serial.println("Sensor TFmini");
 
-  // Serial.print("\tDistancia : ");
-  // Serial.print(TFdistance);
-  // Serial.print(" cm");
-  // Serial.print("\tFortaleza de Señal: ");
-  // Serial.println(TFstrength);
-  // Serial.print("\tTemperatura TFmini: ");
-  // Serial.println(TFtemp);
+  Serial.print("\tDistancia : ");
+  Serial.print(TFdistance);
+  Serial.print(" cm");
+  Serial.print("\tFortaleza de Señal: ");
+  Serial.println(TFstrength);
+  Serial.print("\tTemperatura TFmini: ");
+  Serial.println(TFtemp);
 
   Serial.println("-----------------------------------------------");
   Serial.println("Sensor Neo6-M");
@@ -227,36 +226,37 @@ void SensorServicio::mostrarValores()
   
 }
 
+// Método para formatear la data del TFmini s [LIDAR]
 void SensorServicio::getTFminiData() {
-  // static char i = 0;
-  // char j = 0;
-  // int checksum = 0;
-  // static int rx[9];
-  // if(TFminiSerial.available())
-  // {
-  //   // Serial.println( "tfmini serial available" );
-  //   rx[i] = TFminiSerial.read();
-  //   if(rx[0] != 0x59) {
-  //     i = 0;
-  //   } else if(i == 1 && rx[1] != 0x59) {
-  //     i = 0;
-  //   } else if(i == 8) {
-  //     for(j = 0; j < 8; j++) {
-  //       checksum += rx[j];
-  //     }
-  //     if(rx[8] == (checksum % 256)) {
-  //       TFdistance = rx[2] + rx[3] * 256;
-  //       TFstrength = rx[4] + rx[5] * 256;
-  //     }
-  //     i = 0;
-  //   } else
-  //   {
-  //     i++;
-  //   } 
-  // }
+  static char i = 0;
+  char j = 0;
+  int checksum = 0;
+  static int rx[9];
+  if(TFminiSerial.available())
+  {
+    // Serial.println( "tfmini serial available" );
+    rx[i] = TFminiSerial.read();
+    if(rx[0] != 0x59) {
+      i = 0;
+    } else if(i == 1 && rx[1] != 0x59) {
+      i = 0;
+    } else if(i == 8) {
+      for(j = 0; j < 8; j++) {
+        checksum += rx[j];
+      }
+      if(rx[8] == (checksum % 256)) {
+        TFdistance = rx[2] + rx[3] * 256;
+        TFstrength = rx[4] + rx[5] * 256;
+      }
+      i = 0;
+    } else
+    {
+      i++;
+    } 
+  }
 }
 
-
+// Metodo para leer todos los parámetros del GPS Neo 6M
 void SensorServicio::readGPS()
 {  
   while (gpsSerial.available() > 0) {
@@ -268,7 +268,6 @@ void SensorServicio::readGPS()
         // Obtener la altitud y velocidad
         gpsAltitude = gps.altitude.meters();
         gpsSpeed = gps.speed.kmph();
-
 
         // Obtener la fecha y hora
         if (gps.date.isValid()) {          
@@ -302,8 +301,6 @@ void SensorServicio::readGPS()
         Serial.println("Sin señal GPS");
       }
     }
-    
-    // delay(500);
   }
 }
 

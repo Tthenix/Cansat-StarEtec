@@ -26,5 +26,5 @@ void loop()
 
   delete[] ValoresDeSensores;   // Liberar la memoria asignada con new
 
-  delay(1000);
+  delay(3000);
 }
