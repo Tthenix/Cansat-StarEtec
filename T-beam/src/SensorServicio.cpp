@@ -108,9 +108,9 @@ void SensorServicio::leerSensores()
 
   // /*** TFmini values ***/
   this->getTFminiData();
-  TFdistance = TFmini.getDistance();
-  TFtemp = TFmini.getSensorTemperature();
-  TFstrength = TFmini.getSignalStrength();
+  // TFdistance = TFmini.getDistance();
+  // TFtemp = TFmini.getSensorTemperature();
+  // TFstrength = TFmini.getSignalStrength();
 
   /*** NEO6M values ***/
   this->readGPS();
@@ -190,8 +190,6 @@ void SensorServicio::mostrarValores()
   Serial.print(" cm");
   Serial.print("\tFortaleza de Señal: ");
   Serial.println(TFstrength);
-  Serial.print("\tTemperatura TFmini: ");
-  Serial.println(TFtemp);
 
   Serial.println("-----------------------------------------------");
   Serial.println("Sensor Neo6-M");

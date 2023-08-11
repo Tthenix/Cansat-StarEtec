@@ -11,7 +11,8 @@
 
 
 // #include "Adafruit_Sensor.h"
-#include <TFMiniPlus.h>
+// #include <TFMiniPlus.h>
+#include "TFMini.h"
 #include "TinyGPSPlus.h"
 
 // Parámetros a tener en cuenta con el DHT11
@@ -124,9 +125,9 @@ private:
 
     //*** TFmini values ***/
     SoftwareSerial TFminiSerial;
-    TFMiniPlus TFmini;
+    // TFMiniPlus TFmini;
+    TFMini TFmini;
     float TFdistance;
-    float TFtemp;
     float TFstrength;
     
     //*** NEO6M values ***/
