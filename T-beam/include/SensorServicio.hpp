@@ -70,7 +70,6 @@ public:
     //*** TFmini Getters ***/
     void getTFminiData();
     float getDistanciaTF() const { return TFdistance;}
-    float getTemperaturaTF() const { return TFtemp;}
     float getFortalezaTF() const { return TFstrength;}
 
     //*** AXP192 Getters ***/
@@ -125,7 +124,7 @@ private:
 
     //*** TFmini values ***/
     SoftwareSerial TFminiSerial;
-    // TFMiniPlus TFmini;
+
     TFMini TFmini;
     float TFdistance;
     float TFstrength;

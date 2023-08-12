@@ -1,9 +1,10 @@
 #ifndef LoraService_hpp
 #define LoraService_hpp
 
-#include <SPI.h>
 #include <Arduino.h>
+#include <SPI.h>
 #include <LoRa.h>
+#include <stdio.h>
 
 #define SCK 5
 #define MISO 19
@@ -19,7 +20,7 @@ public:
     LoraService();
     void begin();
     bool sendSensorData(const float *data, size_t size);
-    void enviarDatosLoRa(float* data, int dataSize);
+    void enviarDatosLoRa(float *data, int dataSize);
     bool receiveConfirmation();
     bool reconnect();
 

@@ -1,22 +1,20 @@
 #include "../include/SensorServicio.hpp"
 
-SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE)
-          ,TFminiSerial(TFMINI_TX_PIN, TFMINI_RX_PIN)
-          ,gpsSerial(GPS_TX_PIN, GPS_RX_PIN)
+SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE), TFminiSerial(TFMINI_TX_PIN, TFMINI_RX_PIN), gpsSerial(GPS_TX_PIN, GPS_RX_PIN)
 {
 
   // Se definen parametros de seteo para MQ7
-  mq7Pin = 14;  // Defino el pin donde estará el sensor MQ7
+  mq7Pin = 14; // Defino el pin donde estará el sensor MQ7
   mq7Offset = 0.0;
-  mq7MaxPPM = 5.0;  
+  mq7MaxPPM = 5.0;
   mq7MaxValue = 1023.0;
 
   // Ajuste de la zona horaria local (UTC-3 para Mendoza, Argentina)
   timeZoneOffset = -3;
-  
+
   // Se definen parametros de seteo para AXP192
   deltaT = 1.0;
-  
+
   // Habilitar el pull-up interno para los pines SDA y SCL
   // i2cSetPin(BMP_SDA, true);
   // i2cSetPin(BMP_SCL, true);
@@ -28,28 +26,30 @@ void SensorServicio::begin()
   Serial.begin(SerialUsb_BAUDRATE);
   dht.begin();
 
-  M5.begin();
-   
+  M5.begin(false, true, false);
+
   // BMP init
   unsigned status;
   status = bmp.begin(BMP280_ADDRESS_new);
-  if (!status) {
+  if (!status)
+  {
     Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
-                      "try a different address!"));
-    Serial.print("SensorID was: 0x"); Serial.println(bmp.sensorID(),16);
+                     "try a different address!"));
+    Serial.print("SensorID was: 0x");
+    Serial.println(bmp.sensorID(), 16);
     Serial.print("        ID of 0xFF probably means a bad address, a BMP 180 or BMP 085\n");
     Serial.print("        ID of 0x56-0x58 represents a BMP 280,\n");
     Serial.print("        ID of 0x60 represents a BME 280.\n");
     Serial.print("        ID of 0x61 represents a BME 680.\n");
-    while (1) delay(10);
+    while (1)
+      delay(10);
   }
-    /* Default settings from the datasheet. */
+  /* Default settings from the datasheet. */
   bmp.setSampling(Adafruit_BMP280::MODE_FORCED,     /* Operating Mode. */
                   Adafruit_BMP280::SAMPLING_X8,     /* Temp. oversampling */
                   Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
                   Adafruit_BMP280::FILTER_X16,      /* Filtering. */
                   Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-  
 
   TFminiSerial.begin(TFMINI_BAUDRATE);
   TFmini.begin(&TFminiSerial);
@@ -82,27 +82,32 @@ void SensorServicio::leerSensores()
   // Leer el tiempo transcurrido desde el último ciclo de bucle en segundos
   // float deltaT = 1.0; // Ajusta este valor según la frecuencia de lectura
   float current;
-  if((idischarge <= 0)&&(icharge > 0)){
+  if ((idischarge <= 0) && (icharge > 0))
+  {
     current = icharge;
-  } else if((idischarge > 0)&&(icharge <= 0)){
+  }
+  else if ((idischarge > 0) && (icharge <= 0))
+  {
     current = idischarge;
-  } else { 
+  }
+  else
+  {
     current = 0;
   }
   mAh = (current) * (deltaT / 3600.0);
 
-
-  //*** DHT values ***/  
+  //*** DHT values ***/
   dhtHum = dht.readHumidity();
   dhtTemp = dht.readTemperature();
   dhtTempF = dht.readTemperature(true);
 
   // must call this to wake sensor up and get new measurement data
   // it blocks until measurement is complete
-  if (bmp.takeForcedMeasurement()) {
+  if (bmp.takeForcedMeasurement())
+  {
     //*** BMP values ***/
     bmpTemp = bmp.readTemperature();
-    bmpPres = bmp.readPressure() / 100;   // dividir por 100 para tener hPa
+    bmpPres = bmp.readPressure() / 100; // dividir por 100 para tener hPa
     bmpAlti = bmp.readAltitude(1013.25);
   }
 
@@ -216,117 +221,139 @@ void SensorServicio::mostrarValores()
   Serial.print(gpsMinutes);
   Serial.print(":");
   Serial.println(gpsSeconds);
-  if(gpsSerial.available()){
+  if (gpsSerial.available())
+  {
     this->readGPS();
-  } else {
+  }
+  else
+  {
     Serial.println("%%%%  GPS Serial not available!  %%%");
   }
-  
 }
 
 // Método para formatear la data del TFmini s [LIDAR]
-void SensorServicio::getTFminiData() {
+void SensorServicio::getTFminiData()
+{
   static char i = 0;
   char j = 0;
   int checksum = 0;
   static int rx[9];
-  if(TFminiSerial.available())
+  if (TFminiSerial.available())
   {
     // Serial.println( "tfmini serial available" );
     rx[i] = TFminiSerial.read();
-    if(rx[0] != 0x59) {
+    if (rx[0] != 0x59)
+    {
       i = 0;
-    } else if(i == 1 && rx[1] != 0x59) {
+    }
+    else if (i == 1 && rx[1] != 0x59)
+    {
       i = 0;
-    } else if(i == 8) {
-      for(j = 0; j < 8; j++) {
+    }
+    else if (i == 8)
+    {
+      for (j = 0; j < 8; j++)
+      {
         checksum += rx[j];
       }
-      if(rx[8] == (checksum % 256)) {
+      if (rx[8] == (checksum % 256))
+      {
         TFdistance = rx[2] + rx[3] * 256;
         TFstrength = rx[4] + rx[5] * 256;
       }
       i = 0;
-    } else
+    }
+    else
     {
       i++;
-    } 
+    }
   }
 }
 
 // Metodo para leer todos los parámetros del GPS Neo 6M
 void SensorServicio::readGPS()
-{  
-  while (gpsSerial.available() > 0) {
-    if (gps.encode(gpsSerial.read())) {
-      if (gps.location.isValid()) {
+{
+  while (gpsSerial.available() > 0)
+  {
+    if (gps.encode(gpsSerial.read()))
+    {
+      if (gps.location.isValid())
+      {
         gpsLatitude = gps.location.lat();
         gpsLongitude = gps.location.lng();
-        
+
         // Obtener la altitud y velocidad
         gpsAltitude = gps.altitude.meters();
         gpsSpeed = gps.speed.kmph();
 
         // Obtener la fecha y hora
-        if (gps.date.isValid()) {          
-          if (gps.time.isValid()) {
+        if (gps.date.isValid())
+        {
+          if (gps.time.isValid())
+          {
             gpsHour = gps.time.hour();
             gpsDay = gps.date.day();
             // Ajustar la hora a la zona horaria local (UTC-3 para Mendoza, Argentina)
             gpsHour += timeZoneOffset;
-            if (gpsHour < 0) {
+            if (gpsHour < 0)
+            {
               gpsHour += 24;
               gpsDay--;
-            } else if (gpsHour >= 24) {
+            }
+            else if (gpsHour >= 24)
+            {
               gpsHour -= 24;
               gpsDay++;
             }
             gpsHour;
             gpsMinutes = gps.time.minute();
             gpsSeconds = gps.time.minute();
-          } else {
+          }
+          else
+          {
             Serial.println("Hora no válida");
           }
 
-          gpsYear = gps.date.year(); 
-          gpsMonth = gps.date.month(); 
-        } else {
+          gpsYear = gps.date.year();
+          gpsMonth = gps.date.month();
+        }
+        else
+        {
           Serial.println("Fecha no válida");
         }
         Serial.println();
-
-      } else {
+      }
+      else
+      {
         Serial.println("Sin señal GPS");
       }
     }
   }
 }
 
-
-// void SensorServicio::formatearData(float *data)
-// {
-//   // Leemos nuevamente los sensores antes de enviarlos
-//   // leerSensores();
-//   // Cargamos cada dato donde corresponde en el array
-//   data[0] = mq7Pin;
-//   data[1] = mq7VoltageValue;
-//   data[2] = mq7COppm;
-//   data[3] = mAh;
-//   data[4] = vbat;
-//   data[5] = vaps;
-//   data[6] = icharge;
-//   data[7] = idischarge;
-//   data[8] = tempAXP192;
-//   data[9] = dhtHum;
-//   data[10] = dhtTemp;
-//   data[11] = dhtTempF;
-//   // data[12] = bmpPres;
-//   // data[13] = bmpTemp;
-//   // data[14] = bmpAlti;
-//   // data[12] = TFdistance;
-//   // data[13] = TFstrength;
-//   // data[14] = TFtemp;
-//   // data[18] = gpsLatitude;
-//   // data[19] = gpsLongitude;
-//   // data[20] = gpsAltitude;
-// }
+void SensorServicio::formatearData(float *data)
+{
+  // Leemos nuevamente los sensores antes de enviarlos
+  leerSensores();
+  // Cargamos cada dato donde corresponde en el array
+  data[0] = mq7Pin;
+  data[1] = mq7VoltageValue;
+  data[2] = mq7COppm;
+  data[3] = mAh;
+  data[4] = vbat;
+  data[5] = vaps;
+  data[6] = icharge;
+  data[7] = idischarge;
+  data[8] = tempAXP192;
+  data[9] = dhtHum;
+  data[10] = dhtTemp;
+  data[11] = dhtTempF;
+  data[12] = bmpPres;
+  data[13] = bmpTemp;
+  data[14] = bmpAlti;
+  data[15] = TFdistance;
+  data[16] = TFstrength;
+  data[17] = gpsLatitude;
+  data[18] = gpsLongitude;
+  data[19] = gpsAltitude;
+}
