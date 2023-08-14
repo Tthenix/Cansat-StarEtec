@@ -44,6 +44,7 @@ void SensorServicio::begin()
     while (1)
       delay(10);
   }
+
   /* Default settings from the datasheet. */
   bmp.setSampling(Adafruit_BMP280::MODE_FORCED,     /* Operating Mode. */
                   Adafruit_BMP280::SAMPLING_X8,     /* Temp. oversampling */

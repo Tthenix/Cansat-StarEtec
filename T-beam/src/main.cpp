@@ -10,24 +10,27 @@ void setup()
 {
 
   servicioParaSensores.begin(); // Método para inicializar los sensores
-  servicioParaLora.begin();     // Método para inicializar la comunicación LoRa
+  // servicioParaLora.begin();     // Método para inicializar la comunicación LoRa
 }
 
 void loop()
 {
   int sizeValues = 20;
-  float *ValoresDeSensores = new float[sizeValues];                                   // Creamos el array de float inicializados en cero
+  float *ValoresDeSensores = new float[sizeValues]; // Creamos el array de float inicializados en cero
+  float valorAnteriorTF = servicioParaSensores.getDistanciaTF();
 
-  servicioParaSensores.leerSensores();   // Método para realizar la lectura de los sensores
-  servicioParaSensores.mostrarValores(); // Método para realizar la impresión de valores leidos
+  servicioParaSensores.leerSensores(); // Método para realizar la lectura de los sensores
 
-  servicioParaSensores.formatearData(ValoresDeSensores);            // Formateamos los datos a un vector de float
-  servicioParaLora.enviarDatosLoRa(ValoresDeSensores, sizeValues); // Se envían los datos del vector por LoRa
+  if ((servicioParaSensores.getDistanciaTF() != 0) || (valorAnteriorTF != servicioParaSensores.getDistanciaTF()))
+  {
+    servicioParaSensores.mostrarValores();                           // Método para realizar la impresión de valores leidos
+    servicioParaSensores.formatearData(ValoresDeSensores);           // Formateamos los datos a un vector de float
+    // servicioParaLora.enviarDatosLoRa(ValoresDeSensores, sizeValues); // Se envían los datos del vector por LoRa
+  }
 
   delete[] ValoresDeSensores; // Liberar la memoria asignada con new
-  delay(3000);
+  delay(100);
 }
-
 
 /*
 

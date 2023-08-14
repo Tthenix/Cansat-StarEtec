@@ -21,7 +21,7 @@ void LoraService::begin()
             ;
     }
     Serial.println("LoRa Inicializacion OK!");
-    delay(2000);
+    
 }
 
 bool LoraService::sendSensorData(const float *data, size_t size)
@@ -35,9 +35,6 @@ bool LoraService::sendSensorData(const float *data, size_t size)
     LoRa.print(counter);
     LoRa.endPacket();
 
-    counter++;
-
-    delay(10000);
 
     // Retorno temporal para cumplir con la firma de la función.
     return true;
@@ -56,7 +53,7 @@ void LoraService::enviarDatosLoRa(float *data, int dataSize)
     LoRa.endPacket();
     counter++;
 
-    delay(3000);
+   
 
     LoRa.beginPacket();
     LoRa.println("Vector de datos ");
