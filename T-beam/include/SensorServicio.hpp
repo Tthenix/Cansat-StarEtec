@@ -129,6 +129,16 @@ private:
     TFMini TFmini;
     float TFdistance;
     float TFstrength;
+    
+  float TFdistanceAverage = 0.0;
+    static const int numReadings = 3;   // Número de lecturas para evaluar la precisión
+    int readings[numReadings];          // Últimas lecturas de distancia
+    int readIndex = 0;                  // Índice de lectura actual
+    int total = 0;                      // Suma de las lecturas
+    unsigned long previousMillis = 0;   // Hora de la última medición
+    const unsigned long interval = 0; // Intervalo entre mediciones (milisegundos)
+
+    // Resto de la implementación de la clase...
 
     //*** NEO6M values ***/
     SoftwareSerial gpsSerial;

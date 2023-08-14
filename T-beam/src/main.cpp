@@ -20,12 +20,11 @@ void loop()
   float valorAnteriorTF = servicioParaSensores.getDistanciaTF();
 
   servicioParaSensores.leerSensores();   // Método para realizar la lectura de los sensores
-  servicioParaSensores.mostrarValores(); // Método para realizar la impresión de valores leidos
-  servicioParaSensores.formatearData(ValoresDeSensores);
-  if ((servicioParaSensores.getDistanciaTF() != 0) || (valorAnteriorTF != servicioParaSensores.getDistanciaTF()))
-  {
     servicioParaSensores.mostrarValores();                 // Método para realizar la impresión de valores leidos
-    servicioParaSensores.formatearData(ValoresDeSensores); // Formateamos los datos a un vector de float
+    servicioParaSensores.formatearData(ValoresDeSensores); 
+  if ((servicioParaSensores.getDistanciaTF() != 0) && (valorAnteriorTF != servicioParaSensores.getDistanciaTF()))
+  {
+// Formateamos los datos a un vector de float
     // servicioParaLora.enviarDatosLoRa(ValoresDeSensores, sizeValues); // Se envían los datos del vector por LoRa
   }
 
