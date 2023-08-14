@@ -1,4 +1,6 @@
 #include "../include/SensorServicio.hpp"
+#include <Wire.h>
+#include "AXP192.h"
 
 SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE), TFminiSerial(TFMINI_TX_PIN, TFMINI_RX_PIN), gpsSerial(GPS_TX_PIN, GPS_RX_PIN)
 {
@@ -26,7 +28,8 @@ void SensorServicio::begin()
   Serial.begin(SerialUsb_BAUDRATE);
   dht.begin();
 
-  M5.begin(false, true, false);
+  // M5.begin(false, true, false);
+  axp.begin();
 
   // BMP init
   unsigned status;
@@ -74,11 +77,16 @@ void SensorServicio::leerSensores()
   // tempAXP192 = M5.Axp.GetTempInAXP192();
   // (deprecated) // EOF
 
-  vbat = M5.Axp.GetBatVoltage();
-  vaps = M5.Axp.GetAPSVoltage();
-  icharge = M5.Axp.GetBatCurrent();
-  idischarge = M5.Axp.GetBatChargeCurrent();
-  tempAXP192 = M5.Axp.GetTempInAXP192();
+  // vbat = M5.Axp.GetBatVoltage();
+  // vaps = M5.Axp.GetAPSVoltage();
+  // icharge = M5.Axp.GetBatCurrent();
+  // idischarge = M5.Axp.GetBatChargeCurrent();
+  // tempAXP192 = M5.Axp.GetTempInAXP192();
+  vbat = axp.GetBatVoltage();
+  vaps = axp.GetAPSVoltage();
+  icharge = axp.GetBatCurrent();
+  idischarge = axp.GetBatChargeCurrent();
+  tempAXP192 = axp.GetTempInAXP192();
 
   // Leer el tiempo transcurrido desde el último ciclo de bucle en segundos
   // float deltaT = 1.0; // Ajusta este valor según la frecuencia de lectura
