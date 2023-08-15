@@ -1,0 +1,1 @@
+Agregue espacio para una camara Ov7670 
