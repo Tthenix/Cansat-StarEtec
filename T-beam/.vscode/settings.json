@@ -1,4 +1,18 @@
 {
     "cmake.sourceDirectory": "C:/Users/nahue/Desktop/Programacion/Arduino/Cansat-StarEtec/T-beam/.pio/libdeps/ttgo-t-beam/Adafruit BusIO",
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "new": "cpp",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "memory": "cpp",
+        "random": "cpp",
+        "initializer_list": "cpp"
+    }
 }

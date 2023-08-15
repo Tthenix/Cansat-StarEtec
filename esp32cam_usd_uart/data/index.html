@@ -1,0 +1,88 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32-CAM Web Server</title>
+  <link rel="stylesheet" type="text/css" href="data/style.css">
+  <script type="text/javascript" src="data/script.js"></script>
+</head>
+<body>
+  <h1>ESP32-CAM Web Server</h1>
+  <h1>vamooo manaooo!</h1>
+  <h3>camara poronga</h3>
+  <div>caasdasdasd</div>
+  <div id="camera-container">
+    <img id="camera-stream" src="#" alt="Camera Stream">
+  </div>
+  <button id="capture-button">Capture</button>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32-CAM Web Server</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #333;
+    }
+    
+    #camera-container {
+      margin-top: 20px;
+    }
+    
+    #camera-stream {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    #capture-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const cameraStream = document.getElementById("camera-stream");
+      const captureButton = document.getElementById("capture-button");
+    
+      const updateCameraStream = () => {
+        cameraStream.src = "/image?" + new Date().getTime();
+      };
+    
+      const captureImage = () => {
+        fetch("/capture")
+          .then(response => response.text())
+          .then(message => {
+            alert(message);
+            updateCameraStream();
+          });
+      };
+    
+      captureButton.addEventListener("click", captureImage);
+      updateCameraStream();
+    });
+  </script>
+</head>
+<body>
+  <h1>ESP32-CAM Web Server</h1>
+  <h1>vamooo manaooo!</h1>
+  <h3>camara poronga</h3>
+  <div>caasdasdasd</div>
+  <div id="camera-container">
+    <img id="camera-stream" src="#" alt="Camera Stream">
+  </div>
+  <button id="capture-button">Capture</button>
+</body>
+</html>
