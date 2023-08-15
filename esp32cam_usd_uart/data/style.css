@@ -1,0 +1,27 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #333;
+  }
+  
+  #camera-container {
+    margin-top: 20px;
+  }
+  
+  #camera-stream {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  #capture-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
