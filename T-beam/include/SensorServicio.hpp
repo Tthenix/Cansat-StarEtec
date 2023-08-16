@@ -47,118 +47,113 @@
 class SensorServicio
 {
 public:
-    SensorServicio();
+  SensorServicio();
 
-    void begin();
-    void leerSensores();
-    void mostrarValores();
-    void formatearData(float *data);
+  void begin();
+  void leerSensores();
+  void mostrarValores();
+  void formatearData(float *data);
 
-    //*** DHT11 Getters ***/
-    float getHumedadDHT() const { return dhtHum; }
-    float getTemperaturaDHT() const { return dhtTemp; }
-    float getTemperaturaFhDHT() const { return dhtTempF; }
+  //*** DHT11 Getters ***/
+  float getHumedadDHT() const { return dhtHum; }
+  float getTemperaturaDHT() const { return dhtTemp; }
+  float getTemperaturaFhDHT() const { return dhtTempF; }
 
-    //*** TFmini Getters ***/
-    float getVoltajeMQ7() const { return analogRead(14); }
+  //*** TFmini Getters ***/
+  float getVoltajeMQ7() const { return analogRead(14); }
 
-    //*** BMP280 Getters ***/
-    float getTemperaturaBMP() const { return bmpTemp; }
-    float getAltitudBMP() const { return bmpAlti; }
-    float getPresionBMP() const { return bmpPres; }
+  //*** BMP280 Getters ***/
+  float getTemperaturaBMP() const { return bmpTemp; }
+  float getAltitudBMP() const { return bmpAlti; }
+  float getPresionBMP() const { return bmpPres; }
 
-    //*** TFmini Getters ***/
-    void getTFminiData();
-    float getDistanciaTF() const { return TFdistance; }
-    float getFortalezaTF() const { return TFstrength; }
+  //*** TFmini Getters ***/
+  void getTFminiData();
+  float getDistanciaTF() const { return TFdistance; }
+  float getFortalezaTF() const { return TFstrength; }
 
-    //*** AXP192 Getters ***/
-    float getVbat() const { return vbat; }
-    float getVaps() const { return vaps; }
-    float getIcharge() const { return icharge; }
-    float getIdischarge() const { return idischarge; }
-    float getTempAXP192() const { return tempAXP192; }
+  //*** AXP192 Getters ***/
+  float getVbat() const { return vbat; }
+  float getVaps() const { return vaps; }
+  float getIcharge() const { return icharge; }
+  float getIdischarge() const { return idischarge; }
+  float getTempAXP192() const { return tempAXP192; }
 
-    //*** NEO6M Getters ***/
-    void readGPS();
-    float getAltitudGPS() const { return gpsAltitude; }
-    float getLatitudGPS() const { return gpsLatitude; }
-    float getLongitudGPS() const { return gpsLongitude; }
-    float getVelocidadGPS() const { return gpsSpeed; }
-    uint8_t gpsYearGPS() const { return gpsYear; }
-    uint8_t gpsMonthGPS() const { return gpsMonth; }
-    uint8_t gpsDayGPS() const { return gpsDay; }
-    uint8_t gpsHourGPS() const { return gpsHour; }
-    uint8_t gpsMinutesGPS() const { return gpsMinutes; }
-    uint8_t gpsSecondsGPS() const { return gpsSeconds; }
+  //*** NEO6M Getters ***/
+  void readGPS();
+  float getAltitudGPS() const { return gpsAltitude; }
+  float getLatitudGPS() const { return gpsLatitude; }
+  float getLongitudGPS() const { return gpsLongitude; }
+  float getVelocidadGPS() const { return gpsSpeed; }
+  uint8_t gpsYearGPS() const { return gpsYear; }
+  uint8_t gpsMonthGPS() const { return gpsMonth; }
+  uint8_t gpsDayGPS() const { return gpsDay; }
+  uint8_t gpsHourGPS() const { return gpsHour; }
+  uint8_t gpsMinutesGPS() const { return gpsMinutes; }
+  uint8_t gpsSecondsGPS() const { return gpsSeconds; }
 
 private:
-    //*** DHT values ***/
-    DHT dht;
-    float dhtHum;
-    float dhtTemp;
-    float dhtTempF;
+  //*** DHT values ***/
+  DHT dht;
+  float dhtHum;
+  float dhtTemp;
+  float dhtTempF;
 
-    //*** BMP values ***/
-    Adafruit_BMP280 bmp;
-    float bmpTemp;
-    float bmpPres;
-    float bmpAlti;
+  //*** BMP values ***/
+  Adafruit_BMP280 bmp;
+  float bmpTemp;
+  float bmpPres;
+  float bmpAlti;
 
-    //*** MQ7 values ***/
-    int mq7Pin;
-    float mq7VoltageValue;
-    float mq7COppm;
-    float mq7Offset;
-    float mq7MaxPPM;
-    float mq7MaxValue;
+  //*** MQ7 values ***/
+  int mq7Pin;
+  float mq7VoltageValue;
+  float mq7COppm;
+  float mq7Offset;
+  float mq7MaxPPM;
+  float mq7MaxValue;
 
-    //*** AXP192 values ***/
-    AXP192 axp;
-    float vbat;
-    float vaps;
-    float icharge;
-    float idischarge;
-    float tempAXP192;
-    float mAh;
-    float deltaT;
+  //*** AXP192 values ***/
+  AXP192 axp;
+  float vbat;
+  float vaps;
+  float icharge;
+  float idischarge;
+  float tempAXP192;
+  float mAh;
+  float deltaT;
 
-    //*** TFmini values ***/
-    SoftwareSerial TFminiSerial;
+  //*** TFmini values ***/
+  SoftwareSerial TFminiSerial;
 
-    TFMini TFmini;
-    float TFdistance;
-    float TFstrength;
-    
+  TFMini TFmini;
+  float TFdistance;
+  float TFstrength;
+
   float TFdistanceAverage = 0.0;
-    static const int numReadings = 3;   // Número de lecturas para evaluar la precisión
-    int readings[numReadings];          // Últimas lecturas de distancia
-    int readIndex = 0;                  // Índice de lectura actual
-    int total = 0;                      // Suma de las lecturas
-    unsigned long previousMillis = 0;   // Hora de la última medición
-    const unsigned long interval = 0; // Intervalo entre mediciones (milisegundos)
+  static const int numReadings = 3; // Número de lecturas para evaluar la precisión
+  int readings[numReadings];        // Últimas lecturas de distancia
+  int readIndex = 0;                // Índice de lectura actual
+  int total = 0;                    // Suma de las lecturas
+  unsigned long previousMillis = 0; // Hora de la última medición
+  const unsigned long interval = 0; // Intervalo entre mediciones (milisegundos)
 
-    // Resto de la implementación de la clase...
+  // Resto de la implementación de la clase...
 
-    //*** NEO6M values ***/
-    SoftwareSerial gpsSerial;
-    TinyGPSPlus gps;
-    int timeZoneOffset;
-    float gpsLatitude;
-    float gpsLongitude;
-    float gpsAltitude;
-    float gpsSpeed;
-    uint8_t gpsYear;
-    uint8_t gpsMonth;
-    uint8_t gpsDay;
-    uint8_t gpsHour;
-    uint8_t gpsMinutes;
-    uint8_t gpsSeconds;
+  //*** NEO6M values ***/
+  SoftwareSerial gpsSerial;
+  TinyGPSPlus gps;
+  int timeZoneOffset;
+  float gpsLatitude;
+  float gpsLongitude;
+  float gpsAltitude;
+  float gpsSpeed;
+  uint8_t gpsYear;
+  uint8_t gpsMonth;
+  uint8_t gpsDay;
+  uint8_t gpsHour;
+  uint8_t gpsMinutes;
+  uint8_t gpsSeconds;
 };
 
 #endif // SENSOR_SERVICIO_H
-
-/*
-Latitud: -32.876923
-Longitud: -68.843529
-*/
