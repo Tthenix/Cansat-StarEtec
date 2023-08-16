@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include "AXP192.h"
 
-SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE), TFminiSerial(TFMINI_TX_PIN, TFMINI_RX_PIN) //,gpsSerial(GPS_TX_PIN, GPS_RX_PIN)
+SensorServicio::SensorServicio() : dht(DHTPIN, DHTTYPE), TFminiSerial(TFMINI_TX_PIN, TFMINI_RX_PIN), gpsSerial(GPS_TX_PIN, GPS_RX_PIN)
 {
 
   // Se definen parametros de seteo para MQ7
@@ -65,19 +65,6 @@ void SensorServicio::leerSensores()
   mq7VoltageValue = analogRead(mq7Pin) * (3.3 / 1023.0);
 
   //*** AXP192 values ***/
-  // (deprecated) //
-  // vbat = M5.Axp.GetVbatData() * 1.1 / 1000;
-  // vaps = M5.Axp.GetVapsData() * 1.4 / 1000;
-  // icharge = M5.Axp.GetIchargeData() / 2.0;
-  // idischarge = M5.Axp.GetIdischargeData() / 2.0;
-  // tempAXP192 = M5.Axp.GetTempInAXP192();
-  // (deprecated) // EOF
-
-  // vbat = M5.Axp.GetBatVoltage();
-  // vaps = M5.Axp.GetAPSVoltage();
-  // icharge = M5.Axp.GetBatCurrent();
-  // idischarge = M5.Axp.GetBatChargeCurrent();
-  // tempAXP192 = M5.Axp.GetTempInAXP192();
   vbat = axp.GetBatVoltage();
   vaps = axp.GetAPSVoltage();
   icharge = axp.GetBatCurrent();
@@ -118,12 +105,9 @@ void SensorServicio::leerSensores()
 
   // /*** TFmini values ***/
   this->getTFminiData();
-  // TFdistance = TFmini.getDistance();
-  // TFtemp = TFmini.getSensorTemperature();
-  // TFstrength = TFmini.getSignalStrength();
 
   /*** NEO6M values ***/
-  // this->readGPS();
+  this->readGPS();
 }
 
 void SensorServicio::mostrarValores()
@@ -202,38 +186,38 @@ void SensorServicio::mostrarValores()
   Serial.println(TFstrength);
 
   Serial.println("-----------------------------------------------");
-  // Serial.println("Sensor Neo6-M");
+  Serial.println("Sensor Neo6-M");
 
-  // Serial.print("\tLatitud: ");
-  // Serial.println(gpsLatitude, 6);
-  // Serial.print("\tLongitud: ");
-  // Serial.println(gpsLongitude, 6);
-  // Serial.print("\tAltitud GPS: ");
-  // Serial.print(gpsAltitude);
-  // Serial.println(" metros");
-  // Serial.print("\tVelocidad: ");
-  // Serial.print(gpsSpeed);
-  // Serial.println(" km/h");
-  // Serial.print("\tFecha: ");
-  // Serial.print(gpsDay);
-  // Serial.print("/");
-  // Serial.print(gpsMonth);
-  // Serial.print("/");
-  // Serial.print(gpsYear);
-  // Serial.print("\t|  Hora: ");
-  // Serial.print(gpsHour);
-  // Serial.print(":");
-  // Serial.print(gpsMinutes);
-  // Serial.print(":");
-  // Serial.println(gpsSeconds);
-  // if (gpsSerial.available())
-  // {
-  //   this->readGPS();
-  // }
-  // else
-  // {
-  //   Serial.println("%%%%  GPS Serial not available!  %%%");
-  // }
+  Serial.print("\tLatitud: ");
+  Serial.println(gpsLatitude, 6);
+  Serial.print("\tLongitud: ");
+  Serial.println(gpsLongitude, 6);
+  Serial.print("\tAltitud GPS: ");
+  Serial.print(gpsAltitude);
+  Serial.println(" metros");
+  Serial.print("\tVelocidad: ");
+  Serial.print(gpsSpeed);
+  Serial.println(" km/h");
+  Serial.print("\tFecha: ");
+  Serial.print(gpsDay);
+  Serial.print("/");
+  Serial.print(gpsMonth);
+  Serial.print("/");
+  Serial.print(gpsYear);
+  Serial.print("\t|  Hora: ");
+  Serial.print(gpsHour);
+  Serial.print(":");
+  Serial.print(gpsMinutes);
+  Serial.print(":");
+  Serial.println(gpsSeconds);
+  if (gpsSerial.available())
+  {
+    this->readGPS();
+  }
+  else
+  {
+    Serial.println("%%%%  GPS Serial not available!  %%%");
+  }
 }
 
 // Método para formatear la data del TFmini s [LIDAR]
@@ -287,65 +271,65 @@ void SensorServicio::getTFminiData()
 }
 
 // Metodo para leer todos los parámetros del GPS Neo 6M
-// void SensorServicio::readGPS()
-// {
-//   while (gpsSerial.available() > 0)
-//   {
-//     if (gps.encode(gpsSerial.read()))
-//     {
-//       if (gps.location.isValid())
-//       {
-//         gpsLatitude = gps.location.lat();
-//         gpsLongitude = gps.location.lng();
+void SensorServicio::readGPS()
+{
+  while (gpsSerial.available() > 0)
+  {
+    if (gps.encode(gpsSerial.read()))
+    {
+      if (gps.location.isValid())
+      {
+        gpsLatitude = gps.location.lat();
+        gpsLongitude = gps.location.lng();
 
-//         // Obtener la altitud y velocidad
-//         gpsAltitude = gps.altitude.meters();
-//         gpsSpeed = gps.speed.kmph();
+        // Obtener la altitud y velocidad
+        gpsAltitude = gps.altitude.meters();
+        gpsSpeed = gps.speed.kmph();
 
-//         // Obtener la fecha y hora
-//         if (gps.date.isValid())
-//         {
-//           if (gps.time.isValid())
-//           {
-//             gpsHour = gps.time.hour();
-//             gpsDay = gps.date.day();
-//             // Ajustar la hora a la zona horaria local (UTC-3 para Mendoza, Argentina)
-//             gpsHour += timeZoneOffset;
-//             if (gpsHour < 0)
-//             {
-//               gpsHour += 24;
-//               gpsDay--;
-//             }
-//             else if (gpsHour >= 24)
-//             {
-//               gpsHour -= 24;
-//               gpsDay++;
-//             }
-//             gpsHour;
-//             gpsMinutes = gps.time.minute();
-//             gpsSeconds = gps.time.minute();
-//           }
-//           else
-//           {
-//             Serial.println("Hora no válida");
-//           }
+        // Obtener la fecha y hora
+        if (gps.date.isValid())
+        {
+          if (gps.time.isValid())
+          {
+            gpsHour = gps.time.hour();
+            gpsDay = gps.date.day();
+            // Ajustar la hora a la zona horaria local (UTC-3 para Mendoza, Argentina)
+            gpsHour += timeZoneOffset;
+            if (gpsHour < 0)
+            {
+              gpsHour += 24;
+              gpsDay--;
+            }
+            else if (gpsHour >= 24)
+            {
+              gpsHour -= 24;
+              gpsDay++;
+            }
+            gpsHour;
+            gpsMinutes = gps.time.minute();
+            gpsSeconds = gps.time.minute();
+          }
+          else
+          {
+            Serial.println("Hora no válida");
+          }
 
-//           gpsYear = gps.date.year();
-//           gpsMonth = gps.date.month();
-//         }
-//         else
-//         {
-//           Serial.println("Fecha no válida");
-//         }
-//         Serial.println();
-//       }
-//       else
-//       {
-//         Serial.println("Sin señal GPS");
-//       }
-//     }
-//   }
-// }
+          gpsYear = gps.date.year();
+          gpsMonth = gps.date.month();
+        }
+        else
+        {
+          Serial.println("Fecha no válida");
+        }
+        Serial.println();
+      }
+      else
+      {
+        Serial.println("Sin señal GPS");
+      }
+    }
+  }
+}
 
 void SensorServicio::formatearData(float *data)
 {
@@ -367,9 +351,9 @@ void SensorServicio::formatearData(float *data)
   data[12] = bmpPres;
   data[13] = bmpTemp;
   data[14] = bmpAlti;
-  data[15] = TFdistance;
+  data[15] = TFdistanceAverage;
   data[16] = TFstrength;
-  // data[17] = gpsLatitude;
-  // data[18] = gpsLongitude;
-  // data[19] = gpsAltitude;
+  data[17] = gpsLatitude;
+  data[18] = gpsLongitude;
+  data[19] = gpsAltitude;
 }
