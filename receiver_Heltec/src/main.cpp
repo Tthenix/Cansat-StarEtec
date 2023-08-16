@@ -1,22 +1,16 @@
 #include <Arduino.h>
-#include <Wire.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#include "../include/SensorServicio.hpp" // Incluimos archivos de cabeceras correspondientes
+SensorServicio servicioParaSensores; // Instanciamos el objeto servicioParaSensores de la clase SensorService
 
 void setup()
 {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    servicioParaSensores.begin(); 
 }
 
-void loop()
-{
-  // put yo ur main code here, to run repeatedly:
-}
+void loop(){
+  servicioParaSensores.leerSensores();   // Método para realizar la lectura de los sensores
+servicioParaSensores.mostrarValores(); // Método para realizar la impresión de valores leidos
 
-// put function definitions here:
-int myFunction(int x, int y)
-{
-  return x + y;
+    delay(100);
 }
