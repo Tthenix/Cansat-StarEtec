@@ -1,16 +1,20 @@
 #include <Arduino.h>
 
 #include "../include/SensorServicio.hpp" // Incluimos archivos de cabeceras correspondientes
-SensorServicio servicioParaSensores; // Instanciamos el objeto servicioParaSensores de la clase SensorService
+SensorServicio servicioParaSensores;     // Instanciamos el objeto servicioParaSensores de la clase SensorService
 
 void setup()
 {
-    servicioParaSensores.begin(); 
+  Serial.begin(115200);
+  servicioParaSensores.begin();
+  Serial.println("sensorService");
 }
 
-void loop(){
-  servicioParaSensores.leerSensores();   // Método para realizar la lectura de los sensores
-servicioParaSensores.mostrarValores(); // Método para realizar la impresión de valores leidos
+void loop()
+{
+  servicioParaSensores.leerSensores();
+  Serial.println("Valores leídos:");
+  servicioParaSensores.mostrarValores();
 
-    delay(100);
+  delay(1000); // Aumentamos el retardo para observar los valores con calma
 }
