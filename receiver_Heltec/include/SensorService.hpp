@@ -1,0 +1,2 @@
+#ifndef SENSOR_SERVICIO_H
+#define SENSOR_SERVICIO_H
