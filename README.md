@@ -38,8 +38,13 @@ El repositorio está organizado de la siguiente manera:
 
 ## Contacto
 
-Si tienes preguntas, sugerencias o comentarios, puedes ponerte en contacto con nosotros en [correo@example.com](mailto:correo@example.com).
+Si tienes preguntas, sugerencias o comentarios, puedes ponerte en contacto con nosotros visitando [nuestra pagina web](https://sites.google.com/alumno.etec.um.edu.ar/cansat-2023/inicio).
+También están los siguientes correos:
+- Docente Colaborador: [`Mario Stefano Papetti Funes`](mailto:mario.papetti@etec.um.edu.ar).
+- Docente Colaborador: [`Gema Pont`](mailto:maria.pont@etec.um.edu.ar).
+- Alumno Colaborador: [`Nahuel Quiroga`](mailto:n.quiroga@alumno.etec.um.edu.ar).
+- Integrante de equipo: [`Mercedes Marón`](mailto:m.maron@alumno.um.edu.ar).
+- Integrante de equipo: [`Santiago Juárez`](mailto:sc.juarez@alumno.etec.um.edu.ar).
+- Integrante de equipo: [`Mateo Molina`](mailto:mn.molina@alumno.etec.um.edu.ar).
 
 ---
-
-Este `README.md` es solo un ejemplo. Asegúrate de personalizarlo con la información específica de tu proyecto y proporcionar detalles completos sobre cómo configurar, ejecutar y contribuir al proyecto Cansat StarEtec.
